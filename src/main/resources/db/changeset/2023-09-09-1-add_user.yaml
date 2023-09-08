@@ -1,0 +1,136 @@
+databaseChangeLog:
+  - changeSet:
+      id: createUserTable
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+              - column:
+                  name: street
+                  type: VARCHAR(255)
+              - column:
+                  name: building_number
+                  type: VARCHAR(255)
+              - column:
+                  name: apartment_number
+                  type: VARCHAR(255)
+              - column:
+                  name: post_code
+                  type: VARCHAR(255)
+
+  - changeSet:
+      id: createProductTable
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: category
+                  type: VARCHAR(255)
+              - column:
+                  name: price
+                  type: NUMERIC(10, 2)
+              - column:
+                  name: availableQuantity
+                  type: INTEGER
+  - changeSet:
+      id: createOrderTable
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_order_id
+                    referencedColumnNames: id
+                    referencedTableName: users
+                    onDelete: CASCADE
+              - column:
+                  name: order_date
+                  type: TIMESTAMP
+              - column:
+                  name: status
+                  type: VARCHAR(255)
+  - changeSet:
+      id: createOrderItemTable
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: order_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: order_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_item_order_id
+                    referencedColumnNames: id
+                    referencedTableName: orders
+                    onDelete: CASCADE
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_order_item_product_id
+                    referencedColumnNames: id
+                    referencedTableName: products
+                    onDelete: CASCADE
+              - column:
+                  name: quantity
+                  type: INTEGER
+              - column:
+                  name: subtotal
+                  type: NUMERIC(10, 2)
+

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -32,5 +33,15 @@ public class User {
     @ToString.Exclude
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+
+    )
+    @ToString.Exclude
+    private Set<Role> roles;
 
 }

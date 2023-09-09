@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: createUsersRolesTable1
+      author: Tsaava Vazha
+      changes:
+        - createTable:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: role_id
+                  type: BIGINT
+  - changeSet:
+      id: insertRoles
+      author: Tsaava Vazha
+      changes:
+        - sql:
+            sql: INSERT INTO roles(name) VALUES ('ROLE_USER'),('ROLE_ADMIN')
+
+  - changeSet:
+      id: insertUsers1
+      author: Tsaava Vazha
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO users (first_name, last_name, email, password, city, street, building_number, apartment_number, post_code)
+              VALUES ('Test', 'User', 'test@example.com', 'test_password', 'Test City', 'Test Street', '123', '456', '10000')
+  - changeSet:
+      id: insertUsers2
+      author: Tsaava Vazha
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO users (first_name, last_name, email, password, city, street, building_number, apartment_number, post_code)
+              VALUES ('Test', 'User', 'test@gmail.com', 'test_password', 'Test City', 'Test Street', '123', '456', '10000')
+  - changeSet:
+      id: insertUserRoles1
+      author: Tsaava Vazha
+      changes:
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueNumeric: 1
+              - column:
+                  name: role_id
+                  valueNumeric: 1
+  - changeSet:
+      id: insertUserRoles2
+      author: Tsaava Vazha
+      changes:
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueNumeric: 2
+              - column:
+                  name: role_id
+                  valueNumeric: 2

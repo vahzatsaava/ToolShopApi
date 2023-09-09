@@ -1,28 +1,21 @@
 package com.example.toolshopapi.dto;
 
-import com.example.toolshopapi.model.models.Role;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class UserAdditionalDto {
 
+    @NotBlank(message = "First name cannot be empty")
     private String firstName;
 
+    @NotBlank(message = "Last name cannot be empty")
     private String lastName;
 
-    private String email;
-
-    private String password;
-
-    private AddressDto shippingAddress;
-
-    private Set<Role> roles;
 }

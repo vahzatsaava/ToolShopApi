@@ -11,6 +11,7 @@ import com.example.toolshopapi.security.JwtTokenProvider;
 import com.example.toolshopapi.security.UserDetailsServiceImpl;
 import com.example.toolshopapi.service.iterfaces.AuthService;
 import com.example.toolshopapi.service.iterfaces.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,7 +54,10 @@ public class AuthServiceImpl implements AuthService {
         if (signUpDto == null){
             throw new IllegalArgumentException ("signUpDto is null check signUpDto value");
         }
-        manager.authenticate(new UsernamePasswordAuthenticationToken(signUpDto.getEmail(), signUpDto.getPassword()));
+        if (Boolean.FALSE.equals(userService.existsByEmail(signUpDto.getEmail()))) {
+            throw new EntityNotFoundException("User with email " + signUpDto.getEmail() +  " not found!");
+        }
+            manager.authenticate(new UsernamePasswordAuthenticationToken(signUpDto.getEmail(), signUpDto.getPassword()));
         UserDetails loadUserByUsername = userDetails.loadUserByUsername(signUpDto.getEmail());
         String token = tokenProvider.generateToken(loadUserByUsername);
         return new JwtResponse(token);

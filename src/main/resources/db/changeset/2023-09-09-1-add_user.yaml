@@ -21,6 +21,8 @@ databaseChangeLog:
               - column:
                   name: email
                   type: VARCHAR(255)
+                  constraints:
+                    unique: true
               - column:
                   name: password
                   type: VARCHAR(255)

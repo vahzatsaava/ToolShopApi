@@ -10,11 +10,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -26,5 +28,21 @@ public class UserServiceImpl implements UserService {
                 .findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(" entity with email " + email + " not found"));
         return userMapper.toUserDto(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDto save(UserDto user) {
+        return userMapper.toUserDto(userRepository.save(userMapper.toEntity(user)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean existsByEmail(String email) {
+
+        if (email == null){
+            throw new IllegalArgumentException("email is null, we cannot find user by email");
+        }
+        return userRepository.existsByEmail(email);
     }
 }

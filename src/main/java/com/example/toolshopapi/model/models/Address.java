@@ -13,18 +13,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Embeddable
 public class Address {
-    @Column(nullable = false)
     private String city;
 
-    @Column(nullable = false)
     private String street;
 
-    @Column(name = "building_number", nullable = false)
+    @Column(name = "building_number")
     private String buildingNumber;
 
-    @Column(name = "apartment_number", nullable = false)
+    @Column(name = "apartment_number")
     private String apartmentNumber;
 
-    @Column(name = "post_code", nullable = false)
+    @Column(name = "post_code")
     private String postCode;
 }

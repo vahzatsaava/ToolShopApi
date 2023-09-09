@@ -1,6 +1,9 @@
 package com.example.toolshopapi.service.impl;
 
+import com.example.toolshopapi.dto.AddressDto;
+import com.example.toolshopapi.dto.UserAdditionalDto;
 import com.example.toolshopapi.dto.UserDto;
+import com.example.toolshopapi.mapping.AddressMapper;
 import com.example.toolshopapi.mapping.UserMapper;
 import com.example.toolshopapi.model.models.User;
 import com.example.toolshopapi.repository.UserRepository;
@@ -10,12 +13,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
+
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AddressMapper addressMapper;
 
 
     @Override
@@ -33,16 +39,62 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto save(UserDto user) {
-        return userMapper.toUserDto(userRepository.save(userMapper.toEntity(user)));
+        if (user == null) {
+            throw new IllegalArgumentException("entity user is null ");
+        }
+        User userEntity = userRepository.save(userMapper.toEntity(user));
+
+        return userMapper.toUserDto(userEntity);
+    }
+
+    @Override
+    @Transactional
+    public UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userAdditionalDto, AddressDto addressDto) {
+        if (userAdditionalDto == null || addressDto == null) {
+            throw new IllegalArgumentException("entity user is null ");
+        }
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new EntityNotFoundException(" entity with email " + principal.getName() + " not found"));
+
+        userRepository.save(updateUserFields(user,userAdditionalDto,addressDto));
+
+        return userMapper.toUserDto(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Boolean existsByEmail(String email) {
 
-        if (email == null){
+        if (email == null) {
             throw new IllegalArgumentException("email is null, we cannot find user by email");
         }
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccount(Principal principal) {
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new EntityNotFoundException(" entity with email " + principal.getName() + " not found"));
+        userRepository.delete(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserByAdmin(Long id) {
+        if (id == null){
+            throw new IllegalArgumentException("id is null, check value ");
+
+        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(" entity with id " + id + " not found"));
+        userRepository.delete(user);
+    }
+
+    private User updateUserFields(User user, UserAdditionalDto userAdditionalDto,AddressDto addressDto) {
+        user.setFirstName(userAdditionalDto.getFirstName());
+        user.setLastName(userAdditionalDto.getLastName());
+        user.setShippingAddress(addressMapper.toEntity(addressDto));
+        return user;
     }
 }

@@ -11,3 +11,6 @@ spring:
     url: jdbc:postgresql://localhost:5455/user-shop
     username: user
     password: user
+jwt:
+  secret: my-super-secret-key
+  expiration: 360000

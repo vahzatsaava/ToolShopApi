@@ -1,9 +1,12 @@
 package com.example.toolshopapi.dto;
 
+import com.example.toolshopapi.model.models.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +25,6 @@ public class UserDto {
     private String password;
 
     private AddressDto shippingAddress;
+
+    private Set<Role> roles;
 }

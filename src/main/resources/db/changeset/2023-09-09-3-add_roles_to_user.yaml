@@ -26,7 +26,7 @@ databaseChangeLog:
         - sql:
             sql: >
               INSERT INTO users (first_name, last_name, email, password, city, street, building_number, apartment_number, post_code)
-              VALUES ('Test', 'User', 'test@example.com', 'test_password', 'Test City', 'Test Street', '123', '456', '10000')
+              VALUES ('Test', 'User', 'test@example.com', '$2a$10$hWc4JkmgtxkepG8k9GazIukHAgHQMjak6ElBeixoT5URgOuvGUc4m', 'Test City', 'Test Street', '123', '456', '10000')
   - changeSet:
       id: insertUsers2
       author: Tsaava Vazha
@@ -34,7 +34,7 @@ databaseChangeLog:
         - sql:
             sql: >
               INSERT INTO users (first_name, last_name, email, password, city, street, building_number, apartment_number, post_code)
-              VALUES ('Test', 'User', 'test@gmail.com', 'test_password', 'Test City', 'Test Street', '123', '456', '10000')
+              VALUES ('Test', 'User', 'test@gmail.com', '$2a$10$hWc4JkmgtxkepG8k9GazIukHAgHQMjak6ElBeixoT5URgOuvGUc4m', 'Test City', 'Test Street', '123', '456', '10000')
   - changeSet:
       id: insertUserRoles1
       author: Tsaava Vazha

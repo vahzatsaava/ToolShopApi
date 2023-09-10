@@ -1,9 +1,9 @@
 package com.example.toolshopapi.model.models;
 
+import com.example.toolshopapi.model.models.product.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 

@@ -58,18 +58,22 @@ databaseChangeLog:
               - column:
                   name: name
                   type: VARCHAR(255)
+                  constraints:
+                    unique: true
+                    nullable: false
               - column:
                   name: description
                   type: TEXT
               - column:
                   name: category
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: price
                   type: NUMERIC(10, 2)
-              - column:
-                  name: availableQuantity
-                  type: INTEGER
+                  constraints:
+                    nullable: false
   - changeSet:
       id: createOrderTable
       author: Tsaava Vazha

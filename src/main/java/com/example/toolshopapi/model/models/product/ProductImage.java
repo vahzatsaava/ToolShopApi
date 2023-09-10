@@ -1,4 +1,4 @@
-package com.example.toolshopapi.model.models;
+package com.example.toolshopapi.model.models.product;
 
 import jakarta.persistence.*;
 import lombok.Data;

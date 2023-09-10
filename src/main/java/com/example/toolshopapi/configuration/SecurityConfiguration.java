@@ -37,6 +37,7 @@ public class SecurityConfiguration {
                 .cors().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers(AUTH_SWAGGER_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()

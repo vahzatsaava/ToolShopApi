@@ -5,6 +5,7 @@ import com.example.toolshopapi.dto.UserAdditionalDto;
 import com.example.toolshopapi.dto.UserDto;
 import com.example.toolshopapi.dto.general.ResponseDto;
 import com.example.toolshopapi.service.iterfaces.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -25,6 +26,8 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/update-user-info")
+    @Operation(summary = "Update user address and name",
+            description = "This API is used to update the address and name of the authenticated user.")
     public ResponseEntity<ResponseDto<UserDto>> updateUserAddressAndName(Principal principal,
                                                            @RequestBody @Valid UserAdditionalDto userAdditionalDto,
                                                            @RequestBody @Valid AddressDto addressDto){
@@ -35,6 +38,8 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
     @DeleteMapping("/delete-own-account")
+    @Operation(summary = "Delete own account",
+            description = "This API is used to allow authenticated users to delete their own account.")
     public ResponseEntity<ResponseDto<String>> deleteAccount(Principal principal){
         userService.deleteAccount(principal);
         ResponseDto<String> responseDto = new ResponseDto<>(HttpStatus.OK.value(),

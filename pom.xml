@@ -18,6 +18,7 @@
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
         <io.jsonwebtoken>0.9.1</io.jsonwebtoken>
         <org.springdoc>2.1.0</org.springdoc>
+        <commons-io>2.9.0</commons-io>
     </properties>
     <dependencies>
         <dependency>
@@ -84,10 +85,18 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${org.springdoc}</version>
         </dependency>
+
+        <!-- Валидация -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

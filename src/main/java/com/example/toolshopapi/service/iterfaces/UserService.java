@@ -1,6 +1,5 @@
 package com.example.toolshopapi.service.iterfaces;
 
-import com.example.toolshopapi.dto.AddressDto;
 import com.example.toolshopapi.dto.UserAdditionalDto;
 import com.example.toolshopapi.dto.UserDto;
 
@@ -10,7 +9,7 @@ public interface UserService {
     UserDto findUserByEmail(String email);
     UserDto save(UserDto user);
     Boolean existsByEmail(String email);
-    UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userDto, AddressDto addressDto);
+    UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userDto);
     void deleteAccount(Principal principal);
     void deleteUserByAdmin(Long id);
 }

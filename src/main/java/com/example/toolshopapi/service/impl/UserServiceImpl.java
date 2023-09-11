@@ -1,6 +1,5 @@
 package com.example.toolshopapi.service.impl;
 
-import com.example.toolshopapi.dto.AddressDto;
 import com.example.toolshopapi.dto.UserAdditionalDto;
 import com.example.toolshopapi.dto.UserDto;
 import com.example.toolshopapi.mapping.AddressMapper;
@@ -49,14 +48,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userAdditionalDto, AddressDto addressDto) {
-        if (userAdditionalDto == null || addressDto == null) {
+    public UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userAdditionalDto) {
+        if (userAdditionalDto == null ) {
             throw new IllegalArgumentException("entity user is null ");
         }
         User user = userRepository.findByEmail(principal.getName())
                 .orElseThrow(() -> new EntityNotFoundException(" entity with email " + principal.getName() + " not found"));
 
-        userRepository.save(updateUserFields(user,userAdditionalDto,addressDto));
+        userRepository.save(updateUserFields(user,userAdditionalDto));
 
         return userMapper.toUserDto(user);
     }
@@ -91,10 +90,10 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
     }
 
-    private User updateUserFields(User user, UserAdditionalDto userAdditionalDto,AddressDto addressDto) {
+    private User updateUserFields(User user, UserAdditionalDto userAdditionalDto) {
         user.setFirstName(userAdditionalDto.getFirstName());
         user.setLastName(userAdditionalDto.getLastName());
-        user.setShippingAddress(addressMapper.toEntity(addressDto));
+        user.setShippingAddress(addressMapper.toEntity(userAdditionalDto.getAddressDto()));
         return user;
     }
 }

@@ -2,11 +2,13 @@ package com.example.toolshopapi.controller.product;
 
 import com.example.toolshopapi.dto.general.ResponseDto;
 import com.example.toolshopapi.dto.product_dto.ProductDto;
+import com.example.toolshopapi.dto.product_dto.ProductInputSortDto;
 import com.example.toolshopapi.service.iterfaces.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +39,16 @@ public class ProductUserController {
     public ResponseEntity<ResponseDto<List<ProductDto>>> getAllProducts(){
         List<ProductDto> productDtoSaved = productService.getAll();
         ResponseDto<List<ProductDto>> responseDto = new ResponseDto<>(HttpStatus.OK.value(), productDtoSaved);
+
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/order-products")
+    @Operation(summary = "Get products with sorting",
+            description = "This API is used to retrieve products with optional sorting by minimum and maximum price, and category.")
+    public ResponseEntity<ResponseDto<Page<ProductDto>>> getAllOrderProducts(@RequestBody ProductInputSortDto productInputSortDto){
+        Page<ProductDto> productDtoSaved = productService.searchAndSortProducts(productInputSortDto);
+        ResponseDto<Page<ProductDto>> responseDto = new ResponseDto<>(HttpStatus.OK.value(), productDtoSaved);
 
         return ResponseEntity.ok(responseDto);
     }

@@ -1,9 +1,10 @@
 package com.example.toolshopapi.service.impl;
 
-import com.example.toolshopapi.dto.product_dto.InventoryDto;
 import com.example.toolshopapi.dto.product_dto.ProductDto;
+import com.example.toolshopapi.dto.product_dto.ProductInputDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputSortDto;
 import com.example.toolshopapi.mapping.ProductMapper;
+import com.example.toolshopapi.model.models.product.Inventory;
 import com.example.toolshopapi.model.models.product.Product;
 import com.example.toolshopapi.repository.ProductRepository;
 import com.example.toolshopapi.service.iterfaces.InventoryService;
@@ -31,21 +32,29 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
 
 
+
     @Override
     @Transactional
-    public ProductDto save(ProductDto productDto,Integer availableQuantity) {
+    public ProductDto save(ProductInputDto productDto, Integer availableQuantity) {
         if (productDto == null){
             throw new IllegalArgumentException("productDto is null please check value");
         }
 
-        Product product = productMapper.toEntity(productDto);
+        Product product = new Product();
 
-
-        InventoryDto inventory = new InventoryDto();
-        inventory.setProduct(product);
-        inventory.setAvailableQuantity(availableQuantity);
+        product.setPrice(productDto.getPrice());
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setCategory(productDto.getCategory());
 
         product = productRepository.save(product);
+
+
+        Inventory inventory = new Inventory();
+        inventory.setAvailableQuantity(availableQuantity);
+
+        inventory.setProduct(product);
+
         inventoryService.save(inventory);
 
         return productMapper.toDto(product);

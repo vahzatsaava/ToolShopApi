@@ -42,4 +42,14 @@ public class OrderController {
 
         return ResponseEntity.ok(responseDto);
     }
+
+    @GetMapping("/get-last-order")
+    @Operation(summary = "Update user address and name",
+            description = "This API is used to update the address and name of the authenticated user.")
+    public ResponseEntity<ResponseDto<OrderDto>> getLastOrder(Principal principal){
+        OrderDto updated = orderService.findLastUserOrder(principal);
+        ResponseDto<OrderDto> responseDto = new ResponseDto<>(HttpStatus.OK.value(), updated);
+
+        return ResponseEntity.ok(responseDto);
+    }
 }

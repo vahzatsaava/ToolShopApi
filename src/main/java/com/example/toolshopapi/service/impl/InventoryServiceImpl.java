@@ -5,12 +5,12 @@ import com.example.toolshopapi.mapping.InventoryMapper;
 import com.example.toolshopapi.model.models.product.Inventory;
 import com.example.toolshopapi.repository.InventoryRepository;
 import com.example.toolshopapi.service.iterfaces.InventoryService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class InventoryServiceImpl implements InventoryService {
 
     private final InventoryRepository inventoryRepository;

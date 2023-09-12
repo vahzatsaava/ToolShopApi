@@ -8,7 +8,7 @@ import com.example.toolshopapi.model.models.User;
 import com.example.toolshopapi.repository.UserRepository;
 import com.example.toolshopapi.service.iterfaces.UserService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ import java.security.Principal;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;

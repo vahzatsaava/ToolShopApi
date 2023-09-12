@@ -9,7 +9,7 @@ import com.example.toolshopapi.service.iterfaces.ProductImageService;
 import com.example.toolshopapi.service.iterfaces.ProductService;
 import com.example.toolshopapi.utils.PhotoValidator;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class ProductImageServiceImpl implements ProductImageService {
 
@@ -46,7 +46,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Transactional
     public void updateImage(MultipartFile multipartFile, Long productImageId) {
         if (productImageId == null){
-            throw new IllegalArgumentException("productName is null");
+            throw new IllegalArgumentException("productImageId is null");
         }
         PhotoValidator.checkPhoto(multipartFile);
         final String fileName = multipartFile.getOriginalFilename();
@@ -67,7 +67,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Transactional
     public void deleteImage(Long productImageId) {
         if (productImageId == null){
-            throw new IllegalArgumentException("productName is null");
+            throw new IllegalArgumentException("productImageId is null");
         }
         ProductImage productImage = findByID(productImageId);
 

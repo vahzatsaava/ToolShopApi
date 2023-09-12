@@ -10,7 +10,7 @@ import com.example.toolshopapi.service.iterfaces.InventoryService;
 import com.example.toolshopapi.service.iterfaces.ProductService;
 import com.example.toolshopapi.utils.ProductSpecifications;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final InventoryService inventoryService;

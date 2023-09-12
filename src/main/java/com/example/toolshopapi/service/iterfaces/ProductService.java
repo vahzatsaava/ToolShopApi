@@ -1,6 +1,7 @@
 package com.example.toolshopapi.service.iterfaces;
 
 import com.example.toolshopapi.dto.product_dto.ProductDto;
+import com.example.toolshopapi.dto.product_dto.ProductInputDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputSortDto;
 import org.springframework.data.domain.Page;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductDto save(ProductDto productDto,Integer availableQuantity);
+    ProductDto save(ProductInputDto productDto, Integer availableQuantity);
 
     ProductDto update(ProductDto productDto);
 

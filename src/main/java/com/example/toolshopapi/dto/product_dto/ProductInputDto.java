@@ -9,16 +9,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
-
-    private Long id;
-
+public class ProductInputDto {
     @NotBlank(message = "Product name cannot be empty")
     @NotNull(message = "Product name cannot be null")
     private String name;
@@ -32,11 +27,4 @@ public class ProductDto {
     @NotNull(message = "Product price cannot be null")
     @Positive(message = "Product price must be a positive number")
     private BigDecimal price;
-
-    private InventoryDto inventory;
-
-    private List<ProductImageDto> images;
-
-
-
 }

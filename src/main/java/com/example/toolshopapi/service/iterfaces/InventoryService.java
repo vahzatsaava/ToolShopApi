@@ -1,7 +1,7 @@
 package com.example.toolshopapi.service.iterfaces;
 
-import com.example.toolshopapi.dto.product_dto.InventoryDto;
+import com.example.toolshopapi.model.models.product.Inventory;
 
 public interface InventoryService {
-    void save(InventoryDto inventoryDto);
+    void save(Inventory inventory);
 }

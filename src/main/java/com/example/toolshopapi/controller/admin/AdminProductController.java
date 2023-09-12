@@ -2,6 +2,7 @@ package com.example.toolshopapi.controller.admin;
 
 import com.example.toolshopapi.dto.general.ResponseDto;
 import com.example.toolshopapi.dto.product_dto.ProductDto;
+import com.example.toolshopapi.dto.product_dto.ProductInputDto;
 import com.example.toolshopapi.service.iterfaces.ProductImageService;
 import com.example.toolshopapi.service.iterfaces.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class AdminProductController {
     @PostMapping("/create-product/{quantity}")
     @Operation(summary = "[Admin] Create a new product",
             description = "This API is used by administrators to create a new product.")
-    public ResponseEntity<ResponseDto<ProductDto>> createProduct(@RequestBody @Valid ProductDto productDto, @PathVariable  Integer quantity){
+    public ResponseEntity<ResponseDto<ProductDto>> createProduct(@RequestBody @Valid ProductInputDto productDto, @PathVariable  Integer quantity){
         ProductDto productDtoSaved = productService.save(productDto,quantity);
         ResponseDto<ProductDto> responseDto = new ResponseDto<>(HttpStatus.CREATED.value(), productDtoSaved);
 

@@ -1,6 +1,7 @@
 package com.example.toolshopapi.controller.advice;
 
 import com.example.toolshopapi.exceptions.DuplicateKeyException;
+import com.example.toolshopapi.exceptions.QuantityProductNotValidException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,13 @@ public class ControllerExceptionHandler {
     }
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(QuantityProductNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleQuantityProductValueException(QuantityProductNotValidException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);

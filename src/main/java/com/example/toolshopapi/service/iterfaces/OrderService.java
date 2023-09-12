@@ -10,5 +10,6 @@ public interface OrderService {
     OrderDto createOrder(Principal principal, List<OrderInputDto> orderInputDto );
 
     List<OrderDto> findAllUserOrdersByEmail(Principal principal);
+    OrderDto findLastUserOrder(Principal principal);
 
 }

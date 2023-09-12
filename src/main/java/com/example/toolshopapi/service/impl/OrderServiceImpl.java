@@ -4,6 +4,7 @@ import com.example.toolshopapi.dto.UserDto;
 import com.example.toolshopapi.dto.order.OrderDto;
 import com.example.toolshopapi.dto.order.OrderInputDto;
 import com.example.toolshopapi.dto.product_dto.ProductDto;
+import com.example.toolshopapi.exceptions.QuantityProductNotValidException;
 import com.example.toolshopapi.mapping.ProductMapper;
 import com.example.toolshopapi.mapping.UserMapper;
 import com.example.toolshopapi.mapping.order.OrderMapper;
@@ -11,15 +12,13 @@ import com.example.toolshopapi.model.enums.OrderStatus;
 import com.example.toolshopapi.model.models.Order;
 import com.example.toolshopapi.model.models.OrderItem;
 import com.example.toolshopapi.repository.OrderRepository;
-import com.example.toolshopapi.service.iterfaces.OrderItemService;
-import com.example.toolshopapi.service.iterfaces.OrderService;
-import com.example.toolshopapi.service.iterfaces.ProductService;
-import com.example.toolshopapi.service.iterfaces.UserService;
+import com.example.toolshopapi.service.iterfaces.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserService userService;
     private final ProductService productService;
     private final OrderItemService orderItemService;
+    private final InventoryService inventoryService;
     private final OrderRepository orderRepository;
 
     private final OrderMapper orderMapper;
@@ -50,7 +50,9 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = saveOrder(userDto);
 
-        saveOrderItem(orderInputDtos, order, orderItems);
+        List<OrderItem> orderItemsSaved = saveOrderItem(orderInputDtos, order, orderItems);
+
+        order.setOrderItems(orderItemsSaved);
 
         return orderMapper.toDto(order);
     }
@@ -64,6 +66,15 @@ public class OrderServiceImpl implements OrderService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDto findLastUserOrder(Principal principal) {
+        Order order = orderRepository.findTopByUserEmailOrderByOrderDateDesc(principal.getName())
+                .orElseThrow(() -> new EntityNotFoundException("Order is not exist by  " + principal.getName()));
+
+        return orderMapper.toDto(order);
+    }
+
     private Order saveOrder(UserDto userDto) {
         Order order = new Order();
         order.setOrderDate(LocalDateTime.now());
@@ -74,20 +85,36 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private void saveOrderItem(List<OrderInputDto> orderInputDtos, Order order, List<OrderItem> orderItems) {
+    private List<OrderItem> saveOrderItem(List<OrderInputDto> orderInputDtos, Order order, List<OrderItem> orderItems) {
 
         for (OrderInputDto input : orderInputDtos) {
             ProductDto productDto = productService.findByName(input.getProductName());
+            int currentQuantity = productDto.getInventory().getAvailableQuantity();
+            if (isValidQuantity(input, currentQuantity)) {
+                OrderItem orderItem = createOrderItem(order, productDto, input);
+                orderItems.add(orderItem);
+                orderItemService.save(orderItem);
 
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setProduct(productMapper.toEntity(productDto));
-            orderItem.setQuantity(input.getQuantity());
-            orderItem.setSubtotal(input.getSubtotal());
-            orderItems.add(orderItem);
+                inventoryService.updateInventoryQuantity(productDto.getInventory().getId(), currentQuantity - input.getQuantity());
+            } else {
+                throw QuantityProductNotValidException.inputIsBiggerQuantity();
+            }
 
-            orderItemService.save(orderItem);
         }
+        return orderItems;
+    }
+
+    private OrderItem createOrderItem(Order order, ProductDto productDto, OrderInputDto input) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setOrder(order);
+        orderItem.setProduct(productMapper.toEntity(productDto));
+        orderItem.setQuantity(input.getQuantity());
+        orderItem.setSubtotal(productDto.getPrice().multiply(new BigDecimal(input.getQuantity())));
+        return orderItem;
+    }
+
+    private boolean isValidQuantity(OrderInputDto input, int availableQuantity) {
+        return availableQuantity > 0 && availableQuantity >= input.getQuantity();
     }
 
 }

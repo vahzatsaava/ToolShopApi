@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException(" entity with email " + email + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("entity with email " + email + "not found "));
         return userMapper.toUserDto(user);
     }
 
@@ -52,12 +52,12 @@ public class UserServiceImpl implements UserService {
         if (userAdditionalDto == null ) {
             throw new IllegalArgumentException("entity user is null ");
         }
-        User user = userRepository.findByEmail(principal.getName())
-                .orElseThrow(() -> new EntityNotFoundException(" entity with email " + principal.getName() + " not found"));
+        UserDto userDto = findUserByEmail(principal.getName());
+        User userMapped = userMapper.toEntity(userDto);
 
-        userRepository.save(updateUserFields(user,userAdditionalDto));
+        userRepository.save(updateUserFields(userMapped,userAdditionalDto));
 
-        return userMapper.toUserDto(user);
+        return userMapper.toUserDto(userMapped);
     }
 
     @Override
@@ -73,9 +73,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteAccount(Principal principal) {
-        User user = userRepository.findByEmail(principal.getName())
-                .orElseThrow(() -> new EntityNotFoundException(" entity with email " + principal.getName() + " not found"));
-        userRepository.delete(user);
+
+        UserDto userDto = findUserByEmail(principal.getName());
+
+        userRepository.delete(userMapper.toEntity(userDto));
     }
 
     @Override

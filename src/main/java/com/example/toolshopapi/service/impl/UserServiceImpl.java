@@ -29,9 +29,7 @@ public class UserServiceImpl implements UserService {
         if (email == null){
             throw new IllegalArgumentException("email is null, we cannot find user by email");
         }
-        User user = userRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("entity with email " + email + "not found "));
+        User user = findByEmail(email);
         return userMapper.toUserDto(user);
     }
 
@@ -49,15 +47,13 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userAdditionalDto) {
-        if (userAdditionalDto == null ) {
+        if (userAdditionalDto == null) {
             throw new IllegalArgumentException("entity user is null ");
         }
-        UserDto userDto = findUserByEmail(principal.getName());
-        User userMapped = userMapper.toEntity(userDto);
+        User user = findByEmail(principal.getName());
+        updateUserFields(user, userAdditionalDto);
 
-        userRepository.save(updateUserFields(userMapped,userAdditionalDto));
-
-        return userMapper.toUserDto(userMapped);
+        return userMapper.toUserDto(user);
     }
 
     @Override
@@ -74,21 +70,27 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteAccount(Principal principal) {
 
-        UserDto userDto = findUserByEmail(principal.getName());
-
-        userRepository.delete(userMapper.toEntity(userDto));
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new EntityNotFoundException(" entity with email " + principal.getName() + " not found"));
+        userRepository.delete(user);
     }
 
     @Override
     @Transactional
     public void deleteUserByAdmin(Long id) {
-        if (id == null){
+        if (id == null) {
             throw new IllegalArgumentException("id is null, check value ");
 
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" entity with id " + id + " not found"));
         userRepository.delete(user);
+    }
+
+    private User findByEmail(String email) {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("entity with email " + email + "not found "));
     }
 
     private User updateUserFields(User user, UserAdditionalDto userAdditionalDto) {

@@ -31,7 +31,7 @@ public class User {
     private Address shippingAddress;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Order> orders;
 
     @ManyToMany

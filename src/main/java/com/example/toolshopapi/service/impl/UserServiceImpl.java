@@ -2,13 +2,16 @@ package com.example.toolshopapi.service.impl;
 
 import com.example.toolshopapi.dto.UserAdditionalDto;
 import com.example.toolshopapi.dto.UserDto;
+import com.example.toolshopapi.dto.notification.NotificationDto;
 import com.example.toolshopapi.mapping.AddressMapper;
 import com.example.toolshopapi.mapping.UserMapper;
+import com.example.toolshopapi.model.email.constants.NotificationType;
 import com.example.toolshopapi.model.models.User;
 import com.example.toolshopapi.repository.UserRepository;
 import com.example.toolshopapi.service.iterfaces.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final ApplicationContext applicationContext;
     private final UserMapper userMapper;
     private final AddressMapper addressMapper;
 
@@ -53,6 +57,7 @@ public class UserServiceImpl implements UserService {
         User user = findByEmail(principal.getName());
         updateUserFields(user, userAdditionalDto);
 
+        applicationContext.publishEvent(getNotificationDto(user,NotificationType.ADDRESS));
         return userMapper.toUserDto(user);
     }
 
@@ -70,9 +75,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteAccount(Principal principal) {
 
-        User user = userRepository.findByEmail(principal.getName())
-                .orElseThrow(() -> new EntityNotFoundException(" entity with email " + principal.getName() + " not found"));
+        User user = findByEmail(principal.getName());
         userRepository.delete(user);
+
+        applicationContext.publishEvent(getNotificationDto(user,NotificationType.DELETE));
     }
 
     @Override
@@ -80,11 +86,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUserByAdmin(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("id is null, check value ");
-
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(" entity with id " + id + " not found"));
         userRepository.delete(user);
+
+        applicationContext.publishEvent(getNotificationDto(user,NotificationType.REJECTED));
     }
 
     private User findByEmail(String email) {
@@ -98,5 +105,12 @@ public class UserServiceImpl implements UserService {
         user.setLastName(userAdditionalDto.getLastName());
         user.setShippingAddress(addressMapper.toEntity(userAdditionalDto.getAddressDto()));
         return user;
+    }
+    private NotificationDto getNotificationDto(User user,NotificationType notificationType){
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setNotificationType(notificationType);
+        notificationDto.setEmail(user.getEmail());
+        notificationDto.setFirstName(user.getFirstName());
+        return notificationDto;
     }
 }

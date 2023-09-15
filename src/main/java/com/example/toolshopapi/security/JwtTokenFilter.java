@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -47,7 +48,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     jwtTokenProvider.getAllRolesFromToken(jwt)
                             .stream()
                             .map(SimpleGrantedAuthority::new)
-                            .toList()
+                            .collect(Collectors.toList())
             );
             SecurityContextHolder.getContext().setAuthentication(token);
 

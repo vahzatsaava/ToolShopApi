@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final InventoryService inventoryService;
 
-
     private final ProductMapper productMapper;
-
-
 
     @Override
     @Transactional
@@ -95,7 +93,7 @@ public class ProductServiceImpl implements ProductService {
 
         return products.stream()
                 .map(productMapper::toDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override

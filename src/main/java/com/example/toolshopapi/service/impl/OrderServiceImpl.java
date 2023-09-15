@@ -23,6 +23,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -63,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders = orderRepository.findAllByUserEmail(principal.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Orders is not exists by " + principal.getName()));
         return orders.stream().map(orderMapper::toDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override

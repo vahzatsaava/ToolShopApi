@@ -7,6 +7,8 @@ databaseChangeLog:
       file: db/changeset/2023-09-09-3-add_roles_to_user.yaml
   - include:
       file: db/changeset/2023-10-09-1-add_inventory.yaml
+  - include:
+      file: db/changeset/2023-16-09-1-add_user_email.yaml
 
 
 

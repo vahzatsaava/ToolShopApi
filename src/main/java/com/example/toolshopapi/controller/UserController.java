@@ -4,6 +4,7 @@ import com.example.toolshopapi.dto.UserAdditionalDto;
 import com.example.toolshopapi.dto.UserDto;
 import com.example.toolshopapi.dto.general.ResponseDto;
 import com.example.toolshopapi.service.iterfaces.UserService;
+import com.example.toolshopapi.service.user_info.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -20,6 +21,7 @@ import java.security.Principal;
 @SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
+    private final UserInfoService userInfoService;
 
     @PostMapping("/update-user-info")
     @Operation(summary = "Update user address and name",
@@ -42,4 +44,16 @@ public class UserController {
                 String.format("user with email %s was deleted ",principal.getName()));
         return ResponseEntity.ok(responseDto);
     }
+
+    @PatchMapping("/confirm")
+    @Operation(summary = "[US 1.3] Confirm email ",
+            description = "This API is used for confirm email .")
+    public ResponseEntity<ResponseDto<String>> confirmEmail(Principal principal) {
+        userInfoService.confirmEmail(principal);
+        ResponseDto<String> responseDto = new ResponseDto<>(HttpStatus.ACCEPTED.value(),
+                String.format("user with email %s approved own email ", principal.getName()));
+        return ResponseEntity.ok(responseDto);
+    }
+
+
 }

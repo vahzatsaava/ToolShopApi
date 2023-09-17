@@ -22,7 +22,6 @@ public class InventoryServiceImpl implements InventoryService {
         }
 
         inventoryRepository.save(inventory);
-
     }
 
     @Override

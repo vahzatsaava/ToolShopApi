@@ -13,12 +13,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
-                  name: first_name
-                  type: VARCHAR(255)
-              - column:
-                  name: last_name
-                  type: VARCHAR(255)
-              - column:
                   name: email
                   type: VARCHAR(255)
                   constraints:
@@ -26,21 +20,7 @@ databaseChangeLog:
               - column:
                   name: password
                   type: VARCHAR(255)
-              - column:
-                  name: city
-                  type: VARCHAR(255)
-              - column:
-                  name: street
-                  type: VARCHAR(255)
-              - column:
-                  name: building_number
-                  type: VARCHAR(255)
-              - column:
-                  name: apartment_number
-                  type: VARCHAR(255)
-              - column:
-                  name: post_code
-                  type: VARCHAR(255)
+
 
   - changeSet:
       id: createProductTable

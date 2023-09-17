@@ -16,19 +16,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "first_name",nullable = false)
-    private String firstName;
-
-    @Column(name = "last_name",nullable = false)
-    private String lastName;
 
     @Column(name = "email",unique = true)
     private String email;
 
     private String password;
 
-    @Embedded
-    private Address shippingAddress;
+
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
@@ -43,5 +37,8 @@ public class User {
     )
     @ToString.Exclude
     private Set<Role> roles;
+
+    @OneToOne(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    private UserInfo userInfo;
 
 }

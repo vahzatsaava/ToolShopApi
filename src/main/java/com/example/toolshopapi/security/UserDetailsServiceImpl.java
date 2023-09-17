@@ -36,7 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         .collect(Collectors.toList())
         );
     }
-
 }
 
 

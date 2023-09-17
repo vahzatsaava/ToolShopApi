@@ -17,6 +17,20 @@ services:
     restart: unless-stopped
     networks:
       - app
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8088:8088"
+    depends_on:
+      - postgres-shop
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-shop:5432/user-shop
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: user
+    networks:
+      - app
 
 volumes:
   postgres:

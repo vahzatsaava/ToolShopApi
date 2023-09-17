@@ -11,17 +11,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:13
-        ports:
-          - "5432:5432"
-        environment:
-          POSTGRES_USER: user
-          POSTGRES_PASSWORD: user
-          POSTGRES_DB: user-shop
-          PGDATA: /data/PostTestApi
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -45,9 +34,7 @@ jobs:
 
     - name: Run tests (if applicable)
       run: |
-        # Add commands to run your tests here
+        # Добавьте команды для запуска ваших тестов здесь
 
     - name: Publish to GitHub Packages (optional)
       run: mvn deploy -DskipTests
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

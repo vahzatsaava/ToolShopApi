@@ -47,9 +47,9 @@ public interface EmailMessages {
 
     String CONFIRM_YOUR_EMAIL = "Dear %s, please click the button for confirmation of your email address:\n" +
             "\n" +
-            "%s\n" +
             "\n" +
-            "Best regards, A-Benefits Shop.";
+            "\n" +
+            "Best regards, Tool Shop.";
 
     String FREEZE_MESSAGE = "Hi %s,\n" +
             "\n" +
@@ -84,7 +84,7 @@ public interface EmailMessages {
             "You have successfully been registered in ToolShop!\n" +
             "\n" +
             "You can now open possibilities of our Shop from your home. There are some things money can't buy, for everything else - there's ToolShop.\n" +
-            "Make no stay - go and see [hyperlink to the main page of A-Benefits] what you can do firsthand!\n" +
+            "Make no stay - go and see [hyperlink to the main page of Tool] what you can do firsthand!\n" +
             "\n" +
             "If you have any questions you can contact our customer support team via the in-app chat.\n" +
             "\n" +

@@ -15,6 +15,7 @@ import com.example.toolshopapi.service.iterfaces.AuthService;
 import com.example.toolshopapi.service.iterfaces.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider tokenProvider;
     private final AuthenticationManager manager;
@@ -48,9 +50,7 @@ public class AuthServiceImpl implements AuthService {
         User newUser = userMapper.signUpToUser(signUpDto);
         newUser.setRoles(Set.of(roleRepository.findAllByName("ROLE_USER").get()));
         newUser.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-
-        applicationContext.publishEvent(getNotificationDto(signUpDto));
-
+        applicationContext.publishEvent(getNotificationDto(signUpDto,NotificationType.REGISTRATION));
 
         return userService.save(userMapper.toUserDto(newUser));
     }
@@ -70,9 +70,9 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponse(token);
     }
 
-    private NotificationDto getNotificationDto(SignUpDto signUpDto) {
+    private NotificationDto getNotificationDto(SignUpDto signUpDto,NotificationType notificationType) {
         NotificationDto notificationDto = new NotificationDto();
-        notificationDto.setNotificationType(NotificationType.REGISTRATION);
+        notificationDto.setNotificationType(notificationType);
         notificationDto.setEmail(signUpDto.getEmail());
         notificationDto.setFirstName(signUpDto.getEmail());
         return notificationDto;

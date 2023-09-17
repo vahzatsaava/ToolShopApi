@@ -7,7 +7,9 @@ import com.example.toolshopapi.mapping.AddressMapper;
 import com.example.toolshopapi.mapping.UserMapper;
 import com.example.toolshopapi.model.email.constants.NotificationType;
 import com.example.toolshopapi.model.models.User;
+import com.example.toolshopapi.model.models.UserInfo;
 import com.example.toolshopapi.repository.UserRepository;
+import com.example.toolshopapi.service.user_info.UserInfoService;
 import com.example.toolshopapi.service.iterfaces.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.security.Principal;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ApplicationContext applicationContext;
+    private final UserInfoService userInfoService;
     private final UserMapper userMapper;
     private final AddressMapper addressMapper;
 
@@ -55,8 +58,9 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("entity user is null ");
         }
         User user = findByEmail(principal.getName());
-        updateUserFields(user, userAdditionalDto);
+        saveUserInfoAndSetToUser(user,userAdditionalDto);
 
+        applicationContext.publishEvent(getNotificationDto(user, NotificationType.APPROVE_EMAIL));
         applicationContext.publishEvent(getNotificationDto(user,NotificationType.ADDRESS));
         return userMapper.toUserDto(user);
     }
@@ -94,23 +98,36 @@ public class UserServiceImpl implements UserService {
         applicationContext.publishEvent(getNotificationDto(user,NotificationType.REJECTED));
     }
 
+
     private User findByEmail(String email) {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("entity with email " + email + "not found "));
     }
 
-    private User updateUserFields(User user, UserAdditionalDto userAdditionalDto) {
+    private void updateUserFields(UserInfo user, UserAdditionalDto userAdditionalDto) {
         user.setFirstName(userAdditionalDto.getFirstName());
         user.setLastName(userAdditionalDto.getLastName());
         user.setShippingAddress(addressMapper.toEntity(userAdditionalDto.getAddressDto()));
-        return user;
     }
     private NotificationDto getNotificationDto(User user,NotificationType notificationType){
         NotificationDto notificationDto = new NotificationDto();
         notificationDto.setNotificationType(notificationType);
         notificationDto.setEmail(user.getEmail());
-        notificationDto.setFirstName(user.getFirstName());
+        notificationDto.setFirstName(user.getEmail());
         return notificationDto;
+    }
+    private void saveUserInfoAndSetToUser(User user,UserAdditionalDto userAdditionalDto){
+        if (user.getUserInfo() == null) {
+            UserInfo info = new UserInfo();
+            updateUserFields(info, userAdditionalDto);
+            info.setUser(user);
+            user.setUserInfo(info);
+            userInfoService.saveUserInfo(info);
+        } else {
+            UserInfo userInfo = user.getUserInfo();
+            updateUserFields(userInfo, userAdditionalDto);
+            userInfoService.saveUserInfo(userInfo);
+        }
     }
 }

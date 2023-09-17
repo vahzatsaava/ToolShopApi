@@ -25,16 +25,16 @@ databaseChangeLog:
       changes:
         - sql:
             sql: >
-              INSERT INTO users (first_name, last_name, email, password, city, street, building_number, apartment_number, post_code)
-              VALUES ('Test', 'User', 'userUser124@gmail.com', '$2a$10$/ioY3DT0tzAeZG8k6iHjJOXaD9NiWcdunp5uIcSymHDdrZARF/g12', 'Test City', 'Test Street', '123', '456', '10000')
+              INSERT INTO users (email, password)
+              VALUES ('userUser124@gmail.com', '$2a$10$/ioY3DT0tzAeZG8k6iHjJOXaD9NiWcdunp5uIcSymHDdrZARF/g12')
   - changeSet:
       id: insertUsers2
       author: Tsaava Vazha
       changes:
         - sql:
             sql: >
-              INSERT INTO users (first_name, last_name, email, password, city, street, building_number, apartment_number, post_code)
-              VALUES ('Test', 'User', 'userUser123@gmail.com', '$2a$10$ByMRnwVTmNGSvrknXFJFJeWRLqbEbdsmTKsFJphX0/aIjHRt6kpJm', 'Test City', 'Test Street', '123', '456', '10000')
+              INSERT INTO users (email, password)
+              VALUES ('userUser123@gmail.com', '$2a$10$ByMRnwVTmNGSvrknXFJFJeWRLqbEbdsmTKsFJphX0/aIjHRt6kpJm')
   - changeSet:
       id: insertUserRoles1
       author: Tsaava Vazha

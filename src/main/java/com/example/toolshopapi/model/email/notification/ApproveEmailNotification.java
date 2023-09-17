@@ -1,6 +1,7 @@
 package com.example.toolshopapi.model.email.notification;
 
 
+import com.example.toolshopapi.model.email.constants.EmailMessages;
 import com.example.toolshopapi.model.email.constants.EmailSubjects;
 
 public class ApproveEmailNotification extends EmailNotification {
@@ -11,5 +12,8 @@ public class ApproveEmailNotification extends EmailNotification {
 
     @Override
     public void formatMessageBody() {
+        this.body = String.format(EmailMessages.CONFIRM_YOUR_EMAIL,firstName);
     }
+
 }
+

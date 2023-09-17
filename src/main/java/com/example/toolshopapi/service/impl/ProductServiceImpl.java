@@ -106,7 +106,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = findProductByName(name);
 
         productRepository.delete(product);
-
     }
 
     @Override

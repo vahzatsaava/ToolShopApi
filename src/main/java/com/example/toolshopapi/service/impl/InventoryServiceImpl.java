@@ -20,7 +20,6 @@ public class InventoryServiceImpl implements InventoryService {
         if (inventory == null) {
             throw new IllegalArgumentException("inventoryDto is null");
         }
-
         inventoryRepository.save(inventory);
     }
 

@@ -20,6 +20,9 @@ jobs:
         with:
           java-version: '17'
 
+      - name: Create Docker volume
+        run: docker volume create --name=postgres
+
       - name: Start Docker containers
         run: |
           docker-compose up -d postgres-shop
@@ -30,7 +33,6 @@ jobs:
 
       - name: Build Docker images
         run: docker-compose build
-
 
 
       - name: Wait for application to be ready

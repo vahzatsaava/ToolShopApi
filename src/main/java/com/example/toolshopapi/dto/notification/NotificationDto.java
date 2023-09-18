@@ -11,7 +11,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationDto {
-
     private Long id;
     private String firstName;
     private String email;

@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-
   postgres-shop:
     container_name: postgres-shop
     image: postgres
@@ -13,7 +12,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "5455:5432"
+      - "5432:5432"
     restart: unless-stopped
     networks:
       - app

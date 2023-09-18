@@ -37,5 +37,6 @@ jobs:
       - name: Wait for application to be ready
         run: dockerize -wait tcp://postgres-shop:5432 -timeout 3m
 
+
       - name: Publish to GitHub Packages (optional)
         run: mvn deploy -DskipTests

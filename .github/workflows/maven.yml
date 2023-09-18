@@ -34,7 +34,6 @@ jobs:
       - name: Build Docker images
         run: docker-compose build
 
-
       - name: Wait for application to be ready
         run: dockerize -wait tcp://postgres-shop:5432 -timeout 1m
 

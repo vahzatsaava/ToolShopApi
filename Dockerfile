@@ -1,5 +1,7 @@
-FROM openjdk:17-jdk-slim-buster
-VOLUME /tmp
-ARG JAR_FILE=target/ToolShopApi-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+FROM maven:3.8.4-17-jdk-slim-buster AS build
+WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline
+COPY src ./src
+RUN mvn package
+

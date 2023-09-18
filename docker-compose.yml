@@ -12,7 +12,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "5455:5432"
+      - "5432:5432"
     restart: unless-stopped
     networks:
       - app
@@ -25,7 +25,7 @@ services:
     depends_on:
       - postgres-shop
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-shop:5455/user-shop
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-shop:5432/user-shop
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: user
     networks:

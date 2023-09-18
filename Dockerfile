@@ -1,7 +1,4 @@
-FROM maven:3.8.4-openjdk-17-slim AS build
+FROM openjdk:11
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY src ./src
-RUN mvn package
-
+ADD https://github.com/vahzatsaava/ToolShopApi_Back/raw/master/target/ToolShopApi-0.0.1-SNAPSHOT.jar app.jar
+CMD ["java", "-jar", "app.jar"]

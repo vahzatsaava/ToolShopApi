@@ -1,23 +1,41 @@
-name: Docker Compose CI
+name: Java CI with Docker Compose
 
 on:
   push:
-    branches:
-      - master
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker Compose
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
+
+      - name: Start Docker containers
         run: |
-          docker-compose build
           docker-compose up -d postgres-shop
           docker-compose up -d spring-app
           docker-compose ps
           sleep 30
           docker-compose logs spring-app
+
+      - name: Build Docker images
+        run: docker-compose build
+
+
+
+      - name: Wait for application to be ready
+        run: dockerize -wait tcp://localhost:8088 -timeout 1m
+
+
+      - name: Publish to GitHub Packages (optional)
+        run: mvn deploy -DskipTests

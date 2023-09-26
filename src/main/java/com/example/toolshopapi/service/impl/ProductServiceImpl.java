@@ -2,6 +2,7 @@ package com.example.toolshopapi.service.impl;
 
 import com.example.toolshopapi.dto.product_dto.ProductDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputDto;
+import com.example.toolshopapi.dto.product_dto.ProductInputFindDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputSortDto;
 import com.example.toolshopapi.mapping.ProductMapper;
 import com.example.toolshopapi.model.models.product.Inventory;
@@ -133,6 +134,21 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("product with name " + name +
                         " not found"));
     }
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ProductDto> findProductsByNameOrByDescription(ProductInputFindDto productInputFindDto) {
+        if (productInputFindDto == null) {
+            throw new IllegalArgumentException("Parameter 'productInputFindDto' is null");
+        }
+
+        Pageable pageable = PageRequest.of(productInputFindDto.getPage(), productInputFindDto.getSize());
+        Page<Product> productPage = productRepository.findProductsByNameOrByDescription(productInputFindDto.getQuery(), pageable);
+
+        return productPage.map(productMapper::toDto);
+    }
+
+
+
 
     private Specification<Product> buildProductSpecification(ProductInputSortDto productInputSortDto) {
         Specification<Product> specification = Specification.where(null);

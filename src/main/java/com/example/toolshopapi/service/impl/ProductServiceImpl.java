@@ -110,6 +110,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<String> getAllCategory() {
+        return productRepository.getAllCategory()
+                .orElseThrow(() -> new EntityNotFoundException("backes has no categoryes"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Page<ProductDto> searchAndSortProducts(ProductInputSortDto productInputSortDto) {
         Specification<Product> specification = buildProductSpecification(productInputSortDto);
 

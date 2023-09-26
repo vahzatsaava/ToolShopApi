@@ -19,5 +19,7 @@ public interface ProductService {
 
     void delete(String name);
 
+    List<String> getAllCategory();
+
     Page<ProductDto> searchAndSortProducts(ProductInputSortDto productInputSortDto);
 }

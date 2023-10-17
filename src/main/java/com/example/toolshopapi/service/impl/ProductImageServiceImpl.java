@@ -7,7 +7,7 @@ import com.example.toolshopapi.model.models.product.ProductImage;
 import com.example.toolshopapi.repository.ProductImageRepository;
 import com.example.toolshopapi.service.iterfaces.ProductImageService;
 import com.example.toolshopapi.service.iterfaces.ProductService;
-import com.example.toolshopapi.utils.PhotoValidator;
+import com.example.toolshopapi.service.utils.PhotoValidator;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

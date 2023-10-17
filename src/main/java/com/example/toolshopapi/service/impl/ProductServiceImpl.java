@@ -10,7 +10,7 @@ import com.example.toolshopapi.model.models.product.Product;
 import com.example.toolshopapi.repository.ProductRepository;
 import com.example.toolshopapi.service.iterfaces.InventoryService;
 import com.example.toolshopapi.service.iterfaces.ProductService;
-import com.example.toolshopapi.utils.ProductSpecifications;
+import com.example.toolshopapi.service.utils.ProductSpecifications;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

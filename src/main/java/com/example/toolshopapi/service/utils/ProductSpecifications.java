@@ -1,4 +1,4 @@
-package com.example.toolshopapi.utils;
+package com.example.toolshopapi.service.utils;
 
 import com.example.toolshopapi.model.models.product.Product;
 import jakarta.persistence.criteria.Predicate;

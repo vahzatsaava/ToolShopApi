@@ -1,4 +1,4 @@
-package com.example.toolshopapi.utils;
+package com.example.toolshopapi.service.utils;
 
 import com.example.toolshopapi.exceptions.BadRequestException;
 import org.springframework.web.multipart.MultipartFile;

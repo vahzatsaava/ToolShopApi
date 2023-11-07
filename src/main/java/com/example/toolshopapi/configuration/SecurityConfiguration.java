@@ -34,7 +34,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
                 .csrf().disable()
-                .cors().disable()
+                .cors()
+                .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**","/api/v1/product-user/**").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")

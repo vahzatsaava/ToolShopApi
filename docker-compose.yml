@@ -16,6 +16,17 @@ services:
     restart: unless-stopped
     networks:
       - app
+
+  redis:
+    container_name: redis-session
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - app
+
+
   spring-app:
     build:
       context: .

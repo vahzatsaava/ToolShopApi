@@ -9,11 +9,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SignUpDto {
+public class SignUpDto implements Serializable {
 
     @NotBlank(message = "Email must not be blank")
     @Email(message = "Invalid email format")

@@ -9,7 +9,9 @@ import com.example.toolshopapi.mapping.UserMapper;
 import com.example.toolshopapi.model.email.constants.NotificationType;
 import com.example.toolshopapi.model.models.User;
 import com.example.toolshopapi.repository.RoleRepository;
+import com.example.toolshopapi.service.redis.JwtCacheService;
 import com.example.toolshopapi.security.JwtTokenProvider;
+import com.example.toolshopapi.service.redis.SessionRedisService;
 import com.example.toolshopapi.security.UserDetailsServiceImpl;
 import com.example.toolshopapi.service.iterfaces.AuthService;
 import com.example.toolshopapi.service.iterfaces.UserService;
@@ -24,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 @Service
 @RequiredArgsConstructor
@@ -37,7 +40,8 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final UserService userService;
     private final UserMapper userMapper;
-
+    private final JwtCacheService cacheService;
+    private final SessionRedisService sessionRedisService;
     @Override
     @Transactional
     public UserDto register(SignUpDto signUpDto) {
@@ -64,10 +68,22 @@ public class AuthServiceImpl implements AuthService {
         if (Boolean.FALSE.equals(userService.existsByEmail(signUpDto.getEmail()))) {
             throw new EntityNotFoundException("User with email " + signUpDto.getEmail() + " not found!");
         }
-        manager.authenticate(new UsernamePasswordAuthenticationToken(signUpDto.getEmail(), signUpDto.getPassword()));
-        UserDetails loadUserByUsername = userDetails.loadUserByUsername(signUpDto.getEmail());
-        String token = tokenProvider.generateToken(loadUserByUsername);
-        return new JwtResponse(token);
+        if (!sessionRedisService.checkUserCreation(signUpDto)) {
+            sessionRedisService.saveUserSession(signUpDto);
+        }
+
+        Optional<String> cachedToken = cacheService.getCachedTokenForEmail(signUpDto.getEmail());
+
+        if (cachedToken.isPresent()){
+            return new JwtResponse(cachedToken.get());
+        }
+        else {
+            manager.authenticate(new UsernamePasswordAuthenticationToken(signUpDto.getEmail(), signUpDto.getPassword()));
+            UserDetails loadUserByUsername = userDetails.loadUserByUsername(signUpDto.getEmail());
+            String token = tokenProvider.generateToken(loadUserByUsername);
+            cacheService.cacheToken(token, signUpDto.getEmail());
+            return new JwtResponse(token);
+        }
     }
 
     private NotificationDto getNotificationDto(SignUpDto signUpDto,NotificationType notificationType) {

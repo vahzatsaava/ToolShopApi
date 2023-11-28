@@ -2,6 +2,7 @@ package com.example.toolshopapi.service.iterfaces;
 
 import com.example.toolshopapi.dto.UserAdditionalDto;
 import com.example.toolshopapi.dto.UserDto;
+import com.example.toolshopapi.model.models.User;
 
 import java.security.Principal;
 
@@ -11,5 +12,6 @@ public interface UserService {
     Boolean existsByEmail(String email);
     UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userDto);
     void deleteAccount(Principal principal);
+    User findById(Long id);
     void deleteUserByAdmin(Long id);
 }

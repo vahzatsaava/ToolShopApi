@@ -14,6 +14,10 @@ import com.example.toolshopapi.service.iterfaces.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,11 +99,30 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EntityNotFoundException(" entity with id " + id + " not found"));
         userRepository.delete(user);
 
-        applicationContext.publishEvent(getNotificationDto(user,NotificationType.REJECTED));
+        applicationContext.publishEvent(getNotificationDto(user, NotificationType.REJECTED));
+    }
+
+    @Override
+    public User findById(Long id) {
+        if (id == null){
+            throw new NullPointerException("id by user " + id + " is null ");
+        }
+        return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user by id " + id + " not found"));
+    }
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            throw new AccessDeniedException("User must be authenticated");
+        }
+        String email = authentication.getName();
+
+        return findByEmail(email);
     }
 
 
-    private User findByEmail(String email) {
+
+    public User findByEmail(String email) {
         return userRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("entity with email " + email + "not found "));

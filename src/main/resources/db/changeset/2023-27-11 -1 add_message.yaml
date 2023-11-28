@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: createChatRoomTable
+      author: Vazha-Tsaava
+      changes:
+        - createTable:
+            tableName: chat_room_entity
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: color
+                  type: VARCHAR(255)
+              - column:
+                  name: picture
+                  type: BIGINT
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_chat_room_user_id
+                    referencedColumnNames: id
+                    referencedTableName: users
+                    onDelete: CASCADE
+
+  - changeSet:
+      id: createMessageTable
+      author: Vazha-Tsaava
+      changes:
+        - createTable:
+            tableName: message_entity
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_message_user_id
+                    referencedColumnNames: id
+                    referencedTableName: users
+                    onDelete: CASCADE
+              - column:
+                  name: chat_room_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_message_chat_room_id
+                    referencedColumnNames: id
+                    referencedTableName: chat_room_entity
+                    onDelete: CASCADE
+              - column:
+                  name: content
+                  type: VARCHAR(255)
+              - column:
+                  name: role
+                  type: VARCHAR(255)
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: createUserChatRoomTable
+      author: Vazha-Tsaava
+      changes:
+        - createTable:
+            tableName: user_chat_room_entity
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_user_chat_room_user_id
+                    referencedColumnNames: id
+                    referencedTableName: users
+                    onDelete: CASCADE
+              - column:
+                  name: chat_room_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_user_chat_room_chat_room_id
+                    referencedColumnNames: id
+                    referencedTableName: chat_room_entity
+                    onDelete: CASCADE

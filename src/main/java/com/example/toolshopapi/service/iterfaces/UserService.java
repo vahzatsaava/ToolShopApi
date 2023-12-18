@@ -13,5 +13,6 @@ public interface UserService {
     UserDto updateUserAddressAndName(Principal principal, UserAdditionalDto userDto);
     void deleteAccount(Principal principal);
     User findById(Long id);
+    User getCurrentUser();
     void deleteUserByAdmin(Long id);
 }

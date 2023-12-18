@@ -4,6 +4,7 @@ import com.example.toolshopapi.dto.product_dto.ProductDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputFindDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputSortDto;
+import com.example.toolshopapi.model.models.product.Product;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface ProductService {
     ProductDto update(ProductDto productDto);
 
     ProductDto findByName(String name);
+
+    Product findById(Long productId);
 
     List<ProductDto> getAll();
 

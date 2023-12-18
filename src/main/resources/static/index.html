@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h1>WebSocket Client</h1>
+<div id="output"></div>
+<input type="text" id="messageInput" placeholder="Enter your message">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    // Получаем токен из localStorage (или откуда-то еще)
+    const token = localStorage.getItem('eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyVXNlcjEyM0BnbWFpbC5jb20iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImV4cCI6MTcwMzY5MTI0OCwiaWF0IjoxNzAxMDk5MjQ4fQ.kIgaLjzM1EV4ehikFZh7iQx8V7ukKS7ePUYddkysyzM'); // Замените 'yourAuthTokenKey' на ключ, используемый для хранения токена
+
+    // Создаем подключение к WebSocket серверу
+    const socket = new WebSocket('ws://localhost:8080/chat');
+    const stompClient = Stomp.over(socket);
+
+    // Добавляем токен в заголовок запроса
+    const headers = {
+        Authorization: 'Bearer ' + token,
+    };
+
+    // Подписываемся на канал /topic/greetings
+    stompClient.connect(headers, function (frame) {
+        stompClient.subscribe('/topic/greetings', function (greeting) {
+            // Обработка новых сообщений
+            const message = JSON.parse(greeting.body);
+            displayMessage(message.content);
+        });
+    });
+
+    // Функция для вывода сообщений
+    function displayMessage(message) {
+        const output = document.getElementById('output');
+        const p = document.createElement('p');
+        p.textContent = message;
+        output.appendChild(p);
+    }
+
+    // Отправляем сообщение на сервер
+    function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value;
+
+        // Добавляем токен в заголовок запроса
+        const messageHeaders = {
+            Authorization: 'Bearer ' + token,
+        };
+
+        stompClient.send('/app/sendUserMessage', messageHeaders, JSON.stringify({ content: message }));
+        messageInput.value = '';
+    }
+</script>
+</body>
+</html>

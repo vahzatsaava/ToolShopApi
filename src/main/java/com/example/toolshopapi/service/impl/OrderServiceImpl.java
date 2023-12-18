@@ -8,6 +8,7 @@ import com.example.toolshopapi.exceptions.QuantityProductNotValidException;
 import com.example.toolshopapi.mapping.ProductMapper;
 import com.example.toolshopapi.mapping.UserMapper;
 import com.example.toolshopapi.mapping.order.OrderMapper;
+import com.example.toolshopapi.model.enums.LabelStatus;
 import com.example.toolshopapi.model.enums.OrderStatus;
 import com.example.toolshopapi.model.models.Order;
 import com.example.toolshopapi.model.models.OrderItem;
@@ -92,6 +93,11 @@ public class OrderServiceImpl implements OrderService {
             ProductDto productDto = productService.findByName(input.getProductName());
             int currentQuantity = productDto.getInventory().getAvailableQuantity();
             if (isValidQuantity(input, currentQuantity)) {
+                productDto.setSoldQuantity(productDto.getSoldQuantity() + input.getQuantity());
+                if (productDto.getSoldQuantity() > 3){
+                    productDto.setLabel(LabelStatus.BESTSELLER);
+                }
+                productService.update(productDto);
                 OrderItem orderItem = createOrderItem(order, productDto, input);
                 orderItems.add(orderItem);
                 orderItemService.save(orderItem);
@@ -108,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderItem createOrderItem(Order order, ProductDto productDto, OrderInputDto input) {
         OrderItem orderItem = new OrderItem();
         orderItem.setOrder(order);
-        orderItem.setProduct(productMapper.toEntity(productDto));
+        orderItem.setProduct(productMapper.toProductEntity(productDto));
         orderItem.setQuantity(input.getQuantity());
         orderItem.setSubtotal(productDto.getPrice().multiply(new BigDecimal(input.getQuantity())));
         return orderItem;

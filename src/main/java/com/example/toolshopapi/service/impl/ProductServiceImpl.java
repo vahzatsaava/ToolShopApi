@@ -5,6 +5,7 @@ import com.example.toolshopapi.dto.product_dto.ProductInputDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputFindDto;
 import com.example.toolshopapi.dto.product_dto.ProductInputSortDto;
 import com.example.toolshopapi.mapping.ProductMapper;
+import com.example.toolshopapi.model.enums.LabelStatus;
 import com.example.toolshopapi.model.models.product.Inventory;
 import com.example.toolshopapi.model.models.product.Product;
 import com.example.toolshopapi.repository.ProductRepository;
@@ -21,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,18 +47,22 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
         product.setCategory(productDto.getCategory());
+        product.setSoldQuantity(0);
+        product.setLabel(LabelStatus.NEW);
 
         product = productRepository.save(product);
 
 
         Inventory inventory = new Inventory();
         inventory.setAvailableQuantity(availableQuantity);
+        inventory.setReceiptTime(LocalDateTime.now());
 
         inventory.setProduct(product);
 
         inventoryService.save(inventory);
+        product.setInventory(inventory);
 
-        return productMapper.toDto(product);
+        return productMapper.toProductDto(product);
     }
 
     @Override
@@ -72,8 +78,12 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
         product.setName(product.getName());
+        product.setSoldQuantity(productDto.getSoldQuantity());
+        if (product.getSoldQuantity() > 3){
+            product.setLabel(LabelStatus.BESTSELLER);
+        }
 
-        return productMapper.toDto(product);
+        return productMapper.toProductDto(product);
     }
 
     @Override
@@ -84,7 +94,13 @@ public class ProductServiceImpl implements ProductService {
         }
         Product product = findProductByName(name);
 
-        return productMapper.toDto(product);
+        return productMapper.toProductDto(product);
+    }
+
+    @Override
+    public Product findById(Long productId){
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("product not found by id: %s",productId)));
     }
 
     @Override
@@ -93,7 +109,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll();
 
         return products.stream()
-                .map(productMapper::toDto)
+                .map(productMapper::toProductDto)
                 .collect(Collectors.toList());
     }
 
@@ -126,7 +142,7 @@ public class ProductServiceImpl implements ProductService {
 
         Page<Product> productPage = productRepository.findAll(specification, pageable);
 
-        return productPage.map(productMapper::toDto);
+        return productPage.map(productMapper::toProductDto);
     }
 
     private Product findProductByName(String name) {
@@ -144,7 +160,7 @@ public class ProductServiceImpl implements ProductService {
         Pageable pageable = PageRequest.of(productInputFindDto.getPage(), productInputFindDto.getSize());
         Page<Product> productPage = productRepository.findProductsByNameOrByDescription(productInputFindDto.getQuery(), pageable);
 
-        return productPage.map(productMapper::toDto);
+        return productPage.map(productMapper::toProductDto);
     }
 
 

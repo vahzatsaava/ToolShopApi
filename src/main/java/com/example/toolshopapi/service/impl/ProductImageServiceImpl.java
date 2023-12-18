@@ -38,7 +38,7 @@ public class ProductImageServiceImpl implements ProductImageService {
 
         ProductDto productDto = productService.findByName(productName);
 
-        productImage.setProduct(productMapper.toEntity(productDto));
+        productImage.setProduct(productMapper.toProductEntity(productDto));
         productImageRepository.save(productImage);
     }
 

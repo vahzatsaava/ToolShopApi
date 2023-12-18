@@ -110,6 +110,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user by id " + id + " not found"));
     }
 
+    @Override
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {

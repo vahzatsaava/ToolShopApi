@@ -11,6 +11,8 @@ databaseChangeLog:
       file: db/changeset/2023-16-09-1-add_user_email.yaml
   - include:
       file: db/changeset/2023-27-11 -1 add_message.yaml
+  - include:
+      file: db/changeset/2023-12-12-1-add_comments.yaml
 
 
 

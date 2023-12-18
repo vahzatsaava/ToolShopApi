@@ -13,6 +13,9 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
               - column:
+                  name: receipt_time
+                  type: TIMESTAMP
+              - column:
                   name: product_id
                   type: BIGINT
                   constraints:

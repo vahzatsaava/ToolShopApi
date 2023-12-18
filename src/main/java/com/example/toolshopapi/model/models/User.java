@@ -1,5 +1,6 @@
 package com.example.toolshopapi.model.models;
 
+import com.example.toolshopapi.model.models.product.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,5 +39,9 @@ public class User {
 
     @OneToOne(fetch = FetchType.LAZY,mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private UserInfo userInfo;
+
+    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL,orphanRemoval = true)
+    @ToString.Exclude
+    private List<Comment> comments;
 
 }

@@ -42,8 +42,14 @@ databaseChangeLog:
                     unique: true
                     nullable: false
               - column:
+                  name: sold_quantity
+                  type: BIGINT
+              - column:
                   name: description
                   type: TEXT
+              - column:
+                  name: label
+                  type: VARCHAR(255)
               - column:
                   name: category
                   type: VARCHAR(255)
@@ -54,6 +60,15 @@ databaseChangeLog:
                   type: NUMERIC(10, 2)
                   constraints:
                     nullable: false
+              - column:
+                  name: parent_product_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: fk_product_parrent_id
+                    referencedColumnNames: id
+                    referencedTableName: products
+                    onDelete: CASCADE
   - changeSet:
       id: createOrderTable
       author: Tsaava Vazha
